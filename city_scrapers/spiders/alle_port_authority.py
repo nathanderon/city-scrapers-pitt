@@ -123,17 +123,3 @@ class AllePortAuthoritySpider(CityScrapersSpider):
             "address": ", ".join([room, street, city]),
             "name": "",
         }
-
-    def _parse_links(self, item):
-        """Parse or generate links."""
-        documents = []
-        details = item[5]
-        if details.startswith("Minutes: http"):
-            documents.append({"title": "Minutes", "href": details.split(' ')[-1]})
-        agenda = item[3]
-        if agenda.startswith("Agenda: http"):
-            documents.append({"title": "Agenda", "href": agenda.split(' ')[-1]})
-        resolution = item[4]
-        if resolution.startswith("Resolutions: http"):
-            documents.append({"title": "Resolution", "href": resolution.split(' ')[-1]})
-        return documents
