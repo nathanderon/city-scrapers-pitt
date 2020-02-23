@@ -1,6 +1,7 @@
 from city_scrapers_core.constants import NOT_CLASSIFIED
 from city_scrapers_core.items import Meeting
 from city_scrapers_core.spiders import CityScrapersSpider
+from datetime import datetime
 
 
 class PittWaterSpider(CityScrapersSpider):
@@ -41,19 +42,23 @@ class PittWaterSpider(CityScrapersSpider):
         return t
 
     def _parse_description(self, item):
-        """Parse or generate meeting description."""
-        return ""
+        return None
 
     def _parse_classification(self, item):
-        """Parse or generate classification from allowed options."""
         return NOT_CLASSIFIED
 
     def _parse_start(self, item):
-        """Parse start datetime as a naive datetime object."""
+        date = item.css("div.date::text").re("[A-Z][A-z]*.*")
+        time = item.css("div.time::text").re("([0-9].*) -")
+        date_text = date[0] + ' ' + time[0]
+        datetime = datetime.strptime(date_text, '%A, %b %d, %Y %I:%M %p')
         return None
 
     def _parse_end(self, item):
-        """Parse end datetime as a naive datetime object. Added by pipeline if None"""
+        date = item.css("div.date::text").re("[A-Z][A-z]*.*")
+        time = item.css("div.time::text").re("- ([0-9].*)")
+        date_text = date[0] + ' ' + time[0]
+        datetime = datetime.strptime(date_text, '%A, %b %d, %Y %I:%M %p')
         return None
 
     def _parse_time_notes(self, item):
